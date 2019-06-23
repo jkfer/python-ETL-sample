@@ -36,14 +36,15 @@ with open(file, 'rb') as f:
 row_num = len(data)
 
 for num, line in enumerate(data):
-	date = line [0]
-	win_nums = line[1]
-	mega_ball = line[2]
-	multiplier = line[3]
+	if num != 0:
+		date = line[0]
+		win_nums = line[1]
+		mega_ball = line[2]
+		multiplier = line[3]
 
-	new_date = date_convert(date)
+		new_date = date_convert(date)
 
-	print("%s, %s, %s, %s, %s" % (num, new_date, win_nums, mega_ball, multiplier))
+		print("%s, %s, %s, %s, %s" % (num, new_date, win_nums, mega_ball, multiplier))
 
 
 
