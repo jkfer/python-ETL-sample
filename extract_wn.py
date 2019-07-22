@@ -14,6 +14,17 @@
 
 from csv import reader
 
+class Lottery:
+	def __init__(self, server, database, table, password):
+		self.server = server
+		self.database = database
+		self.password = password
+
+	def file_parse(file):
+		with open(file, 'rb') as f:
+			F = reader(f)
+			date = list(F)
+
 
 file = './Lottery_Mega_Millions_Winning_Numbers__Beginning_2002.csv'
 
