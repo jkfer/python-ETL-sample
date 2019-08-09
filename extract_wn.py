@@ -16,8 +16,9 @@ from csv import reader
 
 class Lottery:
 
-	#def __init__(self, server, database, table, password):
+	#def __init__(self, server, user, database, table, password):
 	#	self.server = server
+	#	self.user = user
 	# 	self.database = database
 	#	self.password = password
 
