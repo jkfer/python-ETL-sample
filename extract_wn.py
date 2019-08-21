@@ -1,6 +1,9 @@
 #!/usr/bin/python
 
+
 """
+future: try the same with pandas/numpy
+
 # Columns needed with data type:
 -------------------------------------
 # Primary key ----- ID (auto incrementer)
@@ -13,14 +16,15 @@
 """
 
 from csv import reader
+import mysql.connector as mysql
 
 class Lottery:
 
-	#def __init__(self, server, user, database, table, password):
-	#	self.server = server
-	#	self.user = user
-	# 	self.database = database
-	#	self.password = password
+	def __init__(self, server, user, database, password):
+		self.server = server
+		self.user = user
+		self.database = database
+		self.password = password
 
 
 	def file_parse(self, file):
@@ -41,6 +45,35 @@ class Lottery:
 		return res
 
 
+	# Inserting into table connecting to database
+	# res --> a list of lists. Each item of the list is a line in the DB
+	def Lott_connect(self, res):
+		try:
+			conn = mysql.conneciton(
+				host = self.server,
+				database = self.database,
+				user = self.user,
+				password = self.password
+			)
+			
+			query = "INSERT INTO TABLE (ID, Date, Winning_Numbers, Mega_Ball, Multiplier) VALUES (%d, %s, %s, %d, %s)"
+
+			for i, record in enumerate(res):
+				cursor = conn.cursor()
+				cursor.execute(query, tuple(record))
+				conn.commit()
+				print("Successfully inserted %r" % record)
+
+		except:
+			print("Connection to database failed")
+
+		finally:
+			if conn.is_connected():
+				cursor.close()
+				conn.close()
+			print("Closed MySQL conneciton.")
+
+
 	def date_convert(self, date):
 		D = date.split('/')
 		MM = D[0]
@@ -51,18 +84,14 @@ class Lottery:
 		return new_date
 
 
-	def insert_data(self, data):
-		# take the list of data and form the SQL queries for insertion
-		# SQL_query = ''
-		pass
-
-
-
 if __name__ == '__main__':
-	file = './MegaMillions_WinningNumbers2002.csv'
-	L = Lottery()
+	
+	file = '/home/jkfer/git-projects/python-ETL-sample/MegaMillions_WinningNumbers2002.csv'
+	
+	L = Lottery('mysql.jkf.local', 'joseph', 'Lottery', '123456')
 	res = L.file_parse(file)
+
 	for row in res:
 		row[1] = L.date_convert(row[1])
 
-	print(res)
+	L.Lott_connect(res)
